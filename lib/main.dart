@@ -33,7 +33,9 @@ class _ChatScreenState extends State<ChatScreen> {
   final stt.SpeechToText _speech = stt.SpeechToText();
   final FlutterTts _flutterTts = FlutterTts();
 
-  final String apiKey = "AIzaSyDdQRRdJ5iQVVQHalG_02f2q_BV0jNbACI"; // Replace with your actual API key
+  // DEMO BUILD: the original Gemini API key is intentionally NOT bundled.
+  // Leave empty to use the local mock replies; paste your own key to call Gemini.
+  final String apiKey = "";
 
   void sendMessage(String message) async {
     setState(() {
@@ -51,6 +53,11 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Future<String> getBotResponse(String message) async {
+    if (apiKey.isEmpty) {
+      await Future.delayed(const Duration(milliseconds: 700));
+      return "[Demo mode - mock reply, no Gemini key configured] You said: \"$message\". "
+          "Add your own Gemini API key in lib/main.dart to get real answers.";
+    }
     final url = Uri.parse(
         "https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=$apiKey");
 
